@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flash Faro - Servicios Automotrices</title>
+    <style>
+        /* --- CONFIGURACIÓN Y VARIABLES PREMIUM --- */
+        :root {
+            --bg-principal: #020617;     /* Negro profundo */
+            --bg-tarjeta: #0f172a;       /* Slate oscuro */
+            --bg-tarjeta-hover: #1e293b; /* Slate intermedio */
+            --neon-azul: #00f0ff;        /* Cyan eléctrico estilo faro */
+            --neon-azul-glow: rgba(0, 240, 255, 0.4);
+            --texto-blanco: #f8fafc;
+            --texto-gris: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-blanco);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 100px; /* Espacio extra para que la barra flotante no tape contenido */
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* --- CONTENEDOR DEL LOGO INTEGRADO EN ÓVALO NEÓN --- */
+        .logo-container {
+            width: 100%;
+            max-width: 650px;
+            margin: 40px auto 20px auto;
+            padding: 0 20px;
+            perspective: 1000px;
+        }
+
+        .logo-oval {
+            background: radial-gradient(circle at center, #070f24 0%, #020617 100%);
+            border: 3px solid var(--neon-azul);
+            border-radius: 100px;
+            padding: 35px 20px;
+            text-align: center;
+            box-shadow: 0 0 25px var(--neon-azul-glow), 
+                        inset 0 0 20px var(--neon-azul-glow);
+            position: relative;
+            transition: transform 0.5s ease;
+        }
+
+        .logo-oval:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.7), 
+                        inset 0 0 30px rgba(0, 240, 255, 0.4);
+        }
+
+        .logo-title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1;
+            background: linear-gradient(to bottom, #ffffff 50%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2px;
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.8));
+        }
+
+        .logo-slogan {
+            font-size: 1.3rem;
+            color: var(--neon-azul);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            text-shadow: 0 0 8px var(--neon-azul-glow);
+            margin-left: 6px;
+        }
+
+        /* --- SECCIONES / TÍTULOS --- */
+        .section-title {
+            font-size: 1.6rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 50px 0 25px 0;
+            text-align: center;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .section-title::before, .section-title::after {
+            content: "";
+            height: 2px;
+            flex-grow: 1;
+            background: linear-gradient(to right, transparent, var(--neon-azul), transparent);
+            max-width: 200px;
+        }
+
+        /* --- GRID Y TARJETAS ESTILO HIGH-TECH --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--bg-tarjeta);
+            border: 1px solid #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        @media (hover: hover) {
+            .card:hover {
+                transform: translateY(-8px);
+                border-color: var(--neon-azul);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.15);
+                background: var(--bg-tarjeta-hover);
+            }
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--neon-azul);
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 15px 0 20px 0;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .price-tag span {
+            font-size: 1.4rem;
+            color: var(--neon-azul);
+            font-weight: 700;
+            margin-right: 3px;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .features li {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .features li::before {
+            content: "✦";
+            color: var(--neon-azul);
+            font-weight: bold;
+            margin-right: 10px;
+            text-shadow: 0 0 5px var(--neon-azul-glow);
+        }
+
+        /* --- BOTONES PREMIUM DE ACCIÓN --- */
+        .btn-quote {
+            background: transparent;
+            border: 2px solid var(--neon-azul);
+            color: #ffffff;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .btn-quote::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--neon-azul);
+            z-index: -1;
+            transition: transform 0.3s ease;
+            transform: scaleX(0);
+            transform-origin: right;
+        }
+
+        .btn-quote:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .btn-quote:hover {
+            color: var(--bg-principal);
+            box-shadow: 0 0 20px var(--neon-azul-glow);
+            border-color: var(--neon-azul);
+        }
+
+        .featured-card {
+            border-color: rgba(0, 240, 255, 0.3);
+            background: linear-gradient(180deg, #111e36 0%, var(--bg-tarjeta) 100%);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(90deg, #00f0ff, #0077ff);
+            color: var(--bg-principal);
+            font-size: 0.7rem;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* --- BARRA FLOTANTE DE REDES SOCIALES --- */
+        .social-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 240, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-bar:hover {
+            border-color: var(--neon-azul);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 240, 255, 0.25);
+        }
+
+        .social-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--texto-gris);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding-right: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Colores de marca en hover */
+        .social-link.facebook:hover {
+            color: #1877f2;
+            background: rgba(24, 119, 242, 0.1);
+            border-color: #1877f2;
+            transform: translateY(-4px) scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(24, 119, 242, 0.5));
+        }
+
+        .social-link.tiktok:hover {
+            color: #ff0050;
+            background: rgba(255, 0, 80, 0.1);
+            border-color: #00f2fe; /* Efecto bicolor clásico de tiktok */
+            transform: translateY(-4px) scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(255, 0, 80, 0.5));
+        }
+
+        .social-link.instagram:hover {
+            color: #fccc63;
+            background: linear-gradient(45deg, rgba(245,133,41,0.1), rgba(221,42,123,0.1));
+            border-color: #dd2a7b;
+            transform: translateY(-4px) scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(221, 42, 123, 0.5));
+        }
+
+        /* --- RESPONSIVIDAD REFORZADA (MÓVILES E IPHONE) --- */
+        @media (max-width: 500px) {
+            .logo-oval {
+                border-radius: 40px;
+                padding: 25px 15px;
+            }
+            .logo-title {
+                font-size: 2.3rem;
+            }
+            .logo-slogan {
+                font-size: 0.95rem;
+                letter-spacing: 4px;
+            }
+            .section-title {
+                font-size: 1.3rem;
+                margin: 35px 0 20px 0;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .card {
+                padding: 22px;
+            }
+            .price-tag {
+                font-size: 2.1rem;
+            }
+            /* Ajuste de barra en móviles para ahorrar espacio */
+            .social-bar {
+                padding: 8px 18px;
+                gap: 15px;
+                bottom: 15px;
+            }
+            .social-text {
+                display: none; /* Esconde el texto en pantallas muy pequeñas para dejar solo los iconos */
+            }
+            .social-link {
+                width: 38px;
+                height: 38px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CONTENEDOR DEL LOGO INTEGRADO EN ÓVALO NEÓN -->
+    <div class="logo-container">
+        <div class="logo-oval">
+            <div class="logo-title">Flash Faro</div>
+            <div class="logo-slogan">ilumina tu ruta</div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 1: PAQUETES COMBINADOS -->
+    <h2 class="section-title">Paquetes Todo Incluido</h2>
+    <div class="grid-container">
+
+        <!-- PAQUETE 1 -->
+        <div class="card featured-card">
+            <span class="featured-badge">Ahorro</span>
+            <div>
+                <span class="card-tag">Paquete 1</span>
+                <h3>Seguridad y Confort</h3>
+                <div class="price-tag"><span>$</span>2,000</div>
+                <ul class="features">
+                    <li>Instalación de Alarma Automotriz</li>
+                    <li>Instalación de Seguros Eléctricos</li>
+                    <li>Garantía de mano de obra</li>
+                </ul>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Paquete 1: Seguridad y Confort ($2,000)')">Cotizar</button>
+        </div>
+
+        <!-- PAQUETE 2 -->
+        <div class="card featured-card">
+            <span class="featured-badge">Más Vendido</span>
+            <div>
+                <span class="card-tag">Paquete 2</span>
+                <h3>Renovación Visual</h3>
+                <div class="price-tag"><span>$</span>450</div>
+                <ul class="features">
+                    <li>Pulido de Faros Profesional</li>
+                    <li>Detallado de Plásticos Exteriores</li>
+                </ul>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Paquete 2: Renovación Visual ($450)')">Cotizar</button>
+        </div>
+
+        <!-- PAQUETE 3 -->
+        <div class="card featured-card">
+            <span class="featured-badge">Premium</span>
+            <div>
+                <span class="card-tag">Paquete 3</span>
+                <h3>Smart Drive</h3>
+                <div class="price-tag"><span>$</span>1,800</div>
+                <ul class="features">
+                    <li>Instalación de Audio Completa</li>
+                    <li>Instalación de Cámara de Reversa</li>
+                    <li>Configuración y Calibración</li>
+                </ul>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Paquete 3: Smart Drive ($1,800)')">Cotizar</button>
+        </div>
+
+    </div>
+
+    <!-- SECCIÓN 2: SERVICIOS INDIVIDUALES -->
+    <h2 class="section-title">Servicios Individuales</h2>
+    <div class="grid-container">
+
+        <!-- Alarma -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Seguridad</span>
+                <h3>Instalación de Alarma</h3>
+                <div class="price-tag"><span>$</span>1,500</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Instalación de Alarma Individual ($1,500)')">Cotizar</button>
+        </div>
+
+        <!-- Seguros -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Confort</span>
+                <h3>Seguros Eléctricos</h3>
+                <div class="price-tag"><span>$</span>1,500</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Instalación de Seguros Eléctricos Individual ($1,500)')">Cotizar</button>
+        </div>
+
+        <!-- Pulido -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Estética</span>
+                <h3>Pulido de Faros (Par)</h3>
+                <div class="price-tag"><span>$</span>250</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Pulido de Faros por Par ($250)')">Cotizar</button>
+        </div>
+
+        <!-- Focos LED -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Iluminación</span>
+                <h3>Instalación de Focos LED</h3>
+                <div class="price-tag"><span>$</span>500</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Instalación de Focos LED ($500)')">Cotizar</button>
+        </div>
+
+        <!-- Plásticos -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Estética</span>
+                <h3>Detallado de Plásticos</h3>
+                <div class="price-tag"><span>$</span>300</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Detallado de Plásticos ($300)')">Cotizar</button>
+        </div>
+
+        <!-- Audio -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Audio</span>
+                <h3>Instalación de Audio</h3>
+                <div class="price-tag"><span>$</span>1,500</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Instalación de Audio Individual ($1,500)')">Cotizar</button>
+        </div>
+
+        <!-- Cámara -->
+        <div class="card">
+            <div>
+                <span class="card-tag">Tecnología</span>
+                <h3>Instalación de Cámara de Reversa</h3>
+                <div class="price-tag"><span>$</span>1,500</div>
+            </div>
+            <button class="btn-quote" onclick="cotizarServicio('Instalación de Cámara de Reversa Individual ($1,500)')">Cotizar</button>
+        </div>
+
+    </div>
+
+    <!-- BARRA FLOTANTE DE REDES SOCIALES -->
+    <div class="social-bar">
+        <span class="social-text">Síguenos</span>
+        
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/share/1CbZvJiiKC/" target="_blank" rel="noopener noreferrer" class="social-link facebook" title="Facebook">
+            <svg viewBox="0 0 24 24">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.85z"/>
+            </svg>
+        </a>
+
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@flash_faro?_r=1&_d=secCgYIASAHKAESPgo8q512k5OwJI2wNbMQU%2FLRssTRPneEL7T%2Ftm4lCdPW5H5kB7Jbb%2BsBRF2AFvnX5LPyD7g02iM4k6TQOlb8GgA%3D&_svg=1&checksum=6473895d3b4153b3eafd0e5fd7bf6ef20acdeb7fc2a8e8493d4f7836a4d5ebb6&item_author_type=1&reflow_sign_scene=7&rgssign=8.1.OrIqK4hPzfRdpKYXHc790A&sec_uid=MS4wLjABAAAA_YKXghFyFD2IGK15l9MGHUXkCzI2P2ACyFn61MSSFRSz_iQtYeCHPTchr9BHEYna&sec_user_id=MS4wLjABAAAA_YKXghFyFD2IGK15l9MGHUXkCzI2P2ACyFn61MSSFRSz_iQtYeCHPTchr9BHEYna&share_app_id=1233&share_author_id=7634576373543142420&share_link_id=6213ae12-7b88-4dce-a55b-ae40ea8b99a5&share_region=MX&share_scene=1&sharer_language=es&social_share_type=5&source=h5_m&timestamp=1781651769&u_code=f38g0mdcbk8he7&ug_btm=b8727%2Cb7360&ugbiz_name=ACCOUNT&user_id=7634576373543142420&utm_campaign=client_share&utm_medium=android&utm_source=copy" target="_blank" rel="noopener noreferrer" class="social-link tiktok" title="TikTok">
+            <svg viewBox="0 0 24 24">
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.93.17 1.86.3 2.79.3v3.91c-1.18-.02-2.35-.33-3.41-.88-.41-.22-.8-.49-1.16-.8-.03 2.65-.01 5.3-.02 7.95-.08 2.29-.93 4.54-2.5 6.13-1.8 1.9-4.52 2.73-7.1 2.19-2.73-.48-5-2.61-5.63-5.32-.78-3.16.82-6.62 3.86-7.79.91-.37 1.89-.52 2.86-.48V13.6c-1.34-.14-2.7.43-3.41 1.58-.69 1.05-.62 2.57.19 3.53.86 1.06 2.37 1.41 3.59.84.97-.42 1.6-1.4 1.63-2.46.03-4.11.01-8.22.02-12.33-.03-.1-.07-.2-.1-.31-.5-.07-1-.21-1.48-.42-.69-.32-1.31-.78-1.81-1.36-.57-.64-.97-1.42-1.15-2.26-.14-.65-.18-1.32-.14-1.99h4.01z"/>
+            </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/flash_faro?igsh=a2xvZW5mc2gydWFr" target="_blank" rel="noopener noreferrer" class="social-link instagram" title="Instagram">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- SCRIPT MULTIPLATAFORMA OPTIMIZADO -->
+    <script>
+        function cotizarServicio(nombreServicio) {
+            const telefono = "525659060720"; 
+            const textoMensaje = "¡Hola, Flash Faro! Me interesa solicitar información o una cita para el siguiente servicio: " + nombreServicio + ". ¿Qué disponibilidad de horarios tienen?";
+            const textoCodificado = encodeURIComponent(textoMensaje);
+            const urlWhatsApp = "https://wa.me/" + telefono + "?text=" + textoCodificado;
+            
+            const esMovil = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            if (esMovil) {
+                window.location.href = urlWhatsApp;
+            } else {
+                window.open(urlWhatsApp, '_blank', 'noopener,noreferrer');
+            }
+        }
+    </script>
+
+</body>
+</html>
